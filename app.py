@@ -7,18 +7,19 @@ st.set_page_config(page_title="صناع التقدم", page_icon="🌟")
 st.title("🌟 صناع التقدم")
 st.caption("المساعد الإرشادي الذكي لطالبات المدارس - تحت إشراف أ. سنيدة الهاشمي")
 
-# جلب المفتاح مع التنظيف
+# جلب المفتاح مع التنظيف من أي مسافات أو علامات إضافية
 api_key = os.environ.get("GEMINI_API_KEY", "").strip().strip('"').strip("'")
 
 if not api_key:
     st.error("⚠️ لم يتم العثور على GEMINI_API_KEY. يرجى إضافته في إعدادات Secrets.")
     st.stop()
 
-# تهيئة جوجل جيميناي
+# تهيئة خدمات جوجل جيميناي
 try:
     genai.configure(api_key=api_key)
+    # استخدام النموذج المعتمد والمستقر للـ API
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-2.0-flash",
         system_instruction="""أنتِ المساعد الإرشادي الذكي لطالبات المدارس ضمن مبادرة صناع التقدم، بإشراف الأخصائية النفسية (أ. سنيدة الهاشمي).
 دوركِ الأساسي:
 1. تقديم نصائح لتنظيم الوقت وبناء جداول المذاكرة وتقنية Pomodoro.
