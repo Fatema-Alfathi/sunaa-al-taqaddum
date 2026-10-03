@@ -7,19 +7,19 @@ st.set_page_config(page_title="صناع التقدم", page_icon="🌟")
 st.title("🌟 صناع التقدم")
 st.caption("المساعد الإرشادي الذكي لطالبات المدارس - تحت إشراف أ. سنيدة الهاشمي")
 
-# Key qulqulleessuu
+# جلب المفتاح مع التنظيف من أي مسافات
 api_key = os.environ.get("GEMINI_API_KEY", "").strip().strip('"').strip("'")
 
 if not api_key:
     st.error("⚠️ لم يتم العثور على GEMINI_API_KEY. يرجى إضافته في إعدادات Secrets.")
     st.stop()
 
-# Configuraasiyoona Gemini
+# تهيئة خدمات جوجل جيميناي
 try:
     genai.configure(api_key=api_key)
-    # Moodeela haaraa fi deeggaramaa jiru fayyadamuu
+    # استخدام النموذج المطلوب
     model = genai.GenerativeModel(
-        model_name="gemini-2.5-flash",
+        model_name="gemini-3.8-flash",
         system_instruction="""أنتِ المساعد الإرشادي الذكي لطالبات المدارس ضمن مبادرة صناع التقدم، بإشراف الأخصائية النفسية (أ. سنيدة الهاشمي).
 دوركِ الأساسي:
 1. تقديم نصائح لتنظيم الوقت وبناء جداول المذاكرة وتقنية Pomodoro.
@@ -30,19 +30,19 @@ except Exception as e:
     st.error(f"خطأ في تهيئة المفتاح: {e}")
     st.stop()
 
-# Kuusaa seenaa haasaa
+# إدارة ذاكرة المحادثة
 if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Ergaawvan darban agarsiisuu
+# عرض المحادثات السابقة
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Ergaa barattoota irraa fuudhuu
+# استقبال رسائل الطالبات
 if prompt := st.chat_input("اكتبي سؤالكِ هنا عزيزتي الطالبة..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
