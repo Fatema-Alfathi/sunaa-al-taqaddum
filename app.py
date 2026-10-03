@@ -7,7 +7,7 @@ st.set_page_config(page_title="صناع التقدم", page_icon="🌟")
 st.title("🌟 صناع التقدم")
 st.caption("المساعد الإرشادي الذكي لطالبات المدارس - تحت إشراف أ. سنيدة الهاشمي")
 
-# جلب المفتاح مع التنظيف من أي مسافات
+# جلب المفتاح مع التنظيف
 api_key = os.environ.get("GEMINI_API_KEY", "").strip().strip('"').strip("'")
 
 if not api_key:
@@ -20,8 +20,8 @@ try:
     
     # إعدادات السرعة والاختصار
     generation_config = genai.GenerationConfig(
-        max_output_tokens=300,  # تقليل طول الإجابة لتسريع الرد
-        temperature=0.3         # جعل الردود مباشرة وسريعة
+        max_output_tokens=250,  # إجابة قصيرة وسريعة
+        temperature=0.3         # ردود مباشرة
     )
 
     model = genai.GenerativeModel(
@@ -29,11 +29,11 @@ try:
         generation_config=generation_config,
         system_instruction="""أنتِ المساعد الإرشادي الذكي لطالبات المدارس ضمن مبادرة صناع التقدم، بإشراف الأخصائية النفسية (أ. سنيدة الهاشمي).
 
-قواعد الرد الأساسية:
-1. كن/كوني مُختصراً جداً ومباشراً في الرد دون مقدمات طويلة (أقل من 100 كلمة).
-2. قدم نقاط عمل سريعة وواضحة لتنظيم الوقت، جداول المذاكرة، تقنية Pomodoro، وعلاج التشتت والشرود الذهني.
-3. استخدم أسلوباً دافئاً ومحفزاً ومناسباً لطالبات المدارس.
-4. في حال وجود مشكلة خاصة أو استشارة نفسية معقدة، وجه الطالبة مباشرة وبسطر واحد للتواصل مع الأخصائية النفسية (أ. سنيدة الهاشمي)."""
+قواعد الرد:
+1. كن/كوني مُختصراً جداً ومباشراً في الرد (أقل من 80 كلمة).
+2. قدم خطوات عملية وواضحة فوراً (نقاط رئيسية).
+3. استخدم أسلوباً دافئاً ومحفزاً يناسب طالبات المدارس.
+4. في حال وجود مشكلة خاصة أو استشارة نفسية معقدة، وجه الطالبة بسطر واحد للتواصل مع الأخصائية النفسية (أ. سنيدة الهاشمي)."""
     )
 except Exception as e:
     st.error(f"خطأ في تهيئة المفتاح: {e}")
@@ -59,7 +59,10 @@ if prompt := st.chat_input("اكتبي سؤالكِ هنا عزيزتي الطا
 
     with st.chat_message("assistant"):
         try:
-            response = st.session_state.chat.send_message(prompt)
+            # إظهار مؤشر "جاري التفكير" للطالبة أثناء معالجة الرد
+            with st.spinner("جاري التفكير في أفضل نصيحة لكِ... 💭✨"):
+                response = st.session_state.chat.send_message(prompt)
+                
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
